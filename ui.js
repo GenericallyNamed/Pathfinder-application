@@ -182,6 +182,8 @@ var rowMarginGaps;
 
 function squareTable() {
     var gridTable = document.getElementById("navigationGrid");
+    var totalRows = gridTable.getElementsByTagName("tr").length;
+    var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
     var individualCellWidth = parseLength(getComputedStyle(gridTable.rows[0].cells[0]).width);
     var individualCellHeight = parseLength(getComputedStyle(gridTable.rows[0].cells[0]).height);
     var gridParentDimensions = parseLength(getComputedStyle(gridTable.parentNode).width) < parseLength(getComputedStyle(gridTable).width) + individualCellWidth;
@@ -492,6 +494,8 @@ function resetGrid() {
     setResetClasses();
     gridTable.isRunning = false;
 }
+var totalRows = gridTable.getElementsByTagName("tr").length;
+var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
 
 colCounter.innerText = totalColumns + " columns";
 rowCounter.innerText = totalRows + " rows";
@@ -504,20 +508,24 @@ function pushError(errStr) {
 addColBtn.addEventListener("click",function(){
     console.log("add columns");
     addColumn();
+    var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
     colCounter.innerText = totalColumns + " columns";
 });
 addRowBtn.addEventListener("click",function(){
     console.log("add rows");
     addRow();
+    var totalRows = gridTable.getElementsByTagName("tr").length;
     rowCounter.innerText = totalRows + " rows";
 });
 decreaseColBtn.addEventListener("click",function(){
     console.log("<<<<<<<<<<<<<<decrease columns>>>>>>>>>>>>>");
     removeColumn();
+    var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
     colCounter.innerText = totalColumns + " columns";
 });
 decreaseRowBtn.addEventListener("click",function(){
     console.log("<<<<<<<<<<<<<<decrease rows>>>>>>>>>>>>>");
     removeRow();
+    var totalRows = gridTable.getElementsByTagName("tr").length;
     rowCounter.innerText = totalRows + " rows";
 });
