@@ -31,7 +31,10 @@ var origin_classes;
 var totalRows = gridTable.getElementsByTagName("tr").length;
 var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
 
-
+squareTable();
+setTimeout(function(){
+    squareTable();
+}, 1000);
 
 
 resetBtn.addEventListener("click", function(){
@@ -64,7 +67,7 @@ for(var i = 0; i < totalRows; i++) {
     }
 }
 
-squareTable();
+
 
 
 function cellClicked(x,y) { console.log("<<<< cellClicked() >>>>");
