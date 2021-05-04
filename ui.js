@@ -8,9 +8,6 @@
  * 
  */
 
-
-const controller = new AbortController();
-
 var startBtn = document.getElementById("startBtn");
 var resetBtn = document.getElementById("resetBtn");
 var editBtn = document.getElementById("editBtn");
@@ -26,10 +23,10 @@ var rowCounter = document.getElementById("rowCount");
 var destination_classes;
 var originElement;
 var origin_classes;
-
 var totalRows = gridTable.getElementsByTagName("tr").length;
 var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
-
+colCounter.innerText = totalColumns + " columns";
+rowCounter.innerText = totalRows + " rows";
 squareTable();
 
 resetBtn.addEventListener("click", function(){
@@ -56,9 +53,6 @@ for(var i = 0; i < totalRows; i++) {
         addCellEventListeners(elem);
     }
 }
-
-
-
 
 function cellClicked(x,y) { 
     var selectedCell = gridTable.rows[y].cells[x];
@@ -157,11 +151,6 @@ function parseLength(l) {
     return parseInt((l).substring(0,l.indexOf("px")));
 }
 
-var gridHeight;
-var gridWidth;
-var colMarginGaps;
-var rowMarginGaps;
-
 function squareTable() {
     var gridTable = document.getElementById("navigationGrid");
     var totalRows = gridTable.getElementsByTagName("tr").length;
@@ -173,8 +162,8 @@ function squareTable() {
     document.getElementById("interface").style.width = window.innerWidth+"px";
     height = parseInt((getComputedStyle(gridTable).height).substring(0,((getComputedStyle(gridTable).height).indexOf("px"))));
     width = parseInt((getComputedStyle(gridTable).width).substring(0,((getComputedStyle(gridTable).width).indexOf("px"))));
-    colMarginGaps = totalColumns+1;
-    rowMarginGaps = totalRows+1;
+    var colMarginGaps = totalColumns+1;
+    var rowMarginGaps = totalRows+1;
     var cellWidth = (width-colMarginGaps)/totalColumns;
     var cellHeight = (height-rowMarginGaps)/totalRows;
     if(gridParentDimensions == false) {
@@ -280,7 +269,7 @@ function removeRow() {
             totalRows--;
         }
     } else {
-        pushError("Sorry, there must be at least 5 rows.");
+        alert("Sorry, there must be at least 5 rows.");
     }
     squareTable();
 }
@@ -326,7 +315,6 @@ function setOriginalClasses(elem) {
         elem.originalclasses = "cell-unvisited";
     } 
 }
-
 
 function addCellEventListeners(e) {
     i = e.y;
@@ -429,16 +417,6 @@ function resetGrid() {
     gridTable.isrunning = false;
     setResetClasses();
     gridTable.isRunning = false;
-}
-var totalRows = gridTable.getElementsByTagName("tr").length;
-var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
-
-colCounter.innerText = totalColumns + " columns";
-rowCounter.innerText = totalRows + " rows";
-
-
-function pushError(errStr) {
-    alert(errStr);
 }
 
 addColBtn.addEventListener("click",function(){

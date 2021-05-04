@@ -23,8 +23,6 @@ helpCloseBtn.addEventListener("click",function(){
         helpContainer.classList.remove("unhide");
         setTimeout(function(){
             helpContainer.style.visibility = "hidden";
-        }, 1000);
-        
-        
+        }, 600);   
     }
 });

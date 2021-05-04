@@ -1,3 +1,5 @@
+var rippleBtns = document.getElementsByClassName("addRippleBtn");
+
 function setRippleDimension(elem) {
     var dimensionToUse;
     var parentWidth = elem.width();
@@ -10,7 +12,6 @@ function setRippleDimension(elem) {
     }
     return dimensionToUse
 }
-
 
 function ripple(id, rgb) {    
     var elem = document.getElementById(id);
@@ -68,9 +69,6 @@ function ripple(id, rgb) {
     });
     return;
 }
-
-
-var rippleBtns = document.getElementsByClassName("addRippleBtn");
 
 for (var i = 0; i < rippleBtns.length; i++) {
     var currentElement = rippleBtns[i];

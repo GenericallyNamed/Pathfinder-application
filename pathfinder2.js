@@ -38,9 +38,6 @@ function drawPath(p, i) {
     }
 }
 
-
-
-
 function proxy(cells) {
     path(cells);
 }
@@ -108,7 +105,6 @@ function path(cells) {
     return;
 }
 
-
 function delay() {
     var loop = true;
     setTimeout(function(){
@@ -117,7 +113,6 @@ function delay() {
     while(loop == true) {
     }
 }
-
 
 function getNeighbor(x, y) {
     var neighbors = {
