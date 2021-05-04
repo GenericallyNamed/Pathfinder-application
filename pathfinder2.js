@@ -128,3 +128,31 @@ function delay() {
     while(loop == true) {
     }
 }
+
+
+function getNeighbor(x, y) {
+    var neighbors = {
+        coords: [ {"x":(x-1),"y":(y)}, {"x":(x+1),"y":(y)}, {"x":(x),"y":(y+1)}, {"x":(x),"y":(y-1)} ],
+        objects: []
+    };
+    for (var i = 0; i < 4; i++) {
+        if(neighbors.coords[i].y < 0 || neighbors.coords[i].x < 0 || neighbors.coords[i].y > totalRows-1 || neighbors.coords[i].x > totalColumns-1 ) {
+            neighbors.objects[i] = null;
+        } else {
+            neighbors.objects[i] = gridTable.rows[neighbors.coords[i].y].cells[neighbors.coords[i].x]
+        }
+    }
+    for(var i = 0; i < neighbors.coords.length; i++) {
+        if(neighbors.coords[i].x < 0 || neighbors.coords[i].x > totalColumns-1) {
+            delete neighbors.coords[i];
+            delete neighbors.objects[i];
+        } else if(neighbors.coords[i].y < 0 || neighbors.coords[i].y > totalRows-1) {
+            delete neighbors.coords[i];
+            delete neighbors.objects[i];
+        } else if(neighbors.objects[i].classList.contains("cell-new") || neighbors.objects[i].classList.contains("cell-closed") || neighbors.objects[i].classList.contains("cell-wall") || neighbors.objects[i].classList.contains("cell-start")) {
+            delete neighbors.coords[i];
+            delete neighbors.objects[i];
+        }
+    }
+    return neighbors;
+}
