@@ -28,6 +28,8 @@ var destination_classes;
 var originElement;
 var origin_classes;
 
+var totalRows = gridTable.getElementsByTagName("tr").length;
+var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
 
 
 
