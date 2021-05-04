@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html style="
+    height: 100%;
+"><head ><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ripple.css">
+    <link rel="stylesheet" href="path.css">
+</head>
+
+<body style="margin: 0px;height:-webkit-fill-available;overflow:hidden;">
+    <div id="interface">
+        <div id="helpContainer">
+            <div id="helpInterface">
+                <div id="helpTitle">
+                    Paths Demo<img src="resources/near_me_white_24dp.svg" style="margin-left:5px;width:25px;height:25px;">
+                </div>
+                <div id="helpText">
+                    <div id="helpDescription">
+                        The following demo is a demonstration of Djikstra's pathfinding algorithm.
+                    </div>
+                    <div style="position:absolute;bottom:20%;text-align:center;left:50%;transform:translateX(-50%);">
+                        <div>
+                            Author: Alex Shandilis
+                        </div>
+                        <div>
+                            Version: 5/4/2021
+                        </div>
+                    </div>
+                </div>
+                <div id="helpCloseBtn" class="addRippleBtn" rippleColor="rgb(190, 190, 190)">
+                    <div id="helpCloseBtnText">
+                        Return to Demo
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="gridContainer">
+            <table id="navigationGrid" instance="0" running="false">
+                <tbody><tr>
+                    <td class="cell-unvisited" x="0" y="0"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="1" y="0"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="2" y="0"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="3" y="0"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="4" y="0"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="5" y="0"><div class="cell"></div></td>
+                </tr>
+                <tr>
+                    <td class="cell-wall cell-unvisited" x="0" y="1"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="1" y="1"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="2" y="1"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="3" y="1"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="4" y="1"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="5" y="1"><div class="cell"></div></td>
+                </tr>
+                <tr>
+                    <td class="cell-unvisited" x="0" y="2"><div class="cell"></div></td>
+                    <td class="cell-start cell-unvisited" x="1" y="2"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="2" y="2"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="3" y="2"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="4" y="2"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="5" y="2"><div class="cell"></div></td>
+                </tr>
+                <tr>
+                    <td class="cell-unvisited" x="0" y="3"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="1" y="3"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="2" y="3"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="3" y="3"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="4" y="3"><div class="cell"></div></td>
+                    <td class="cell-wall cell-unvisited" x="5" y="3"><div class="cell"></div></td>
+                </tr>
+                <tr>
+                    <td class="cell-unvisited" x="0" y="4"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="1" y="4"><div class="cell"></div></td>
+                    <td class="cell-wall cell-unvisited" x="2" y="4"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="3" y="4"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="4" y="4"><div class="cell"></div></td>
+                    <td class="cell-wall cell-unvisited" x="5" y="4"><div class="cell"></div></td>
+                </tr>
+                <tr>
+                    <td class="cell-unvisited" x="0" y="5"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="1" y="5"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="2" y="5"><div class="cell"></div></td>
+                    <td class="cell-finish cell-unvisited" x="3" y="5"><div class="cell"></div></td>
+                    <td class="cell-unvisited" x="4" y="5"><div class="cell"></div></td>
+                    <td class="cell-wall cell-unvisited" x="5" y="5"><div class="cell"></div></td>
+                </tr>
+            </tbody></table>
+        </div>
+        <div id="interfacePanel">
+            <div id="btnContainer">
+                <button id="startBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img class="menuBtnImg" src="resources/play_arrow_black_24dp.svg">
+                    </div>
+                </button>
+                <button id="resetBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img style="width:max-content;height:max-content;align-self:center;" class="menuBtnImg" src="resources/replay_black_24dp.svg">
+                    </div>
+                </button>
+                <button id="addRowBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)" style="margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0;">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img style="width:max-content;height:max-content;align-self:center;" class="menuBtnImg" src="resources/expand_less_black_24dp.svg">
+                    </div>
+                </button>
+                <div id="rowCount" isactive="true" class="menuBtn" style="margin-right:0;border-radius:0!important">
+                    
+                </div>
+                <button id="decreaseRowBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)" style="border-top-left-radius:0;border-bottom-left-radius:0;">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img style="width:max-content;height:max-content;align-self:center;" class="menuBtnImg" src="resources/expand_more_black_24dp.svg">
+                    </div>
+                </button>
+                <button id="addColBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)" style="margin-right:0;border-bottom-right-radius:0;border-top-right-radius:0">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img style="width:max-content;height:max-content;align-self:center;" class="menuBtnImg" src="resources/expand_less_black_24dp.svg">
+                    </div>
+                </button>
+                <div id="colCount" isactive="true" class="menuBtn" style="margin-right:0;border-radius:0">
+            
+                </div>
+                <button id="decreaseColBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)" style="border-bottom-left-radius:0;border-top-left-radius:0;">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img style="width:max-content;height:max-content;align-self:center;" class="menuBtnImg" src="resources/expand_more_black_24dp.svg">
+                    </div>
+                </button>
+                <button id="helpBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)" style="margin-right:0!important;">
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                        <img style="width:max-content;height:max-content;align-self:center;" class="menuBtnImg" src="resources/help_outline_white_24dp.svg">
+                    </div>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+    <script src="pathfinding.js"></script>
+    <script src="pathfinder2.js"></script>
+    <script src="ui.js"></script>
+    <script src="ripple.js"></script>
+    <script src="help.js"></script>
+</body></html>

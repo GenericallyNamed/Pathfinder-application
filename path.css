@@ -1,0 +1,33 @@
+@keyframes blinker {
+    50% {
+        opacity:0.5;
+    }
+}
+
+
+.cell-new > .cell {
+    animation: blinker 3s ease infinite;
+    background-color: gold;
+}
+
+
+.cell-visited > .cell {
+    background-color: orange;
+    animation: cellreveal ease-in 0.25s;
+    animation-fill-mode: forwards;
+}
+
+
+.cell-start > .cell {
+    background-color: rgb(182, 26, 26);
+    animation: cellreveal ease-in 0.25s;
+    animation-fill-mode: forwards;
+}
+
+.cell-path > .cell {
+    background-color:aquamarine;
+    animation: cellreveal ease-in 0.25s;
+    animation-fill-mode: forwards;
+}
+
+
