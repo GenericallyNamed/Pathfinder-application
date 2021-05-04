@@ -1,3 +1,4 @@
+var gridTable = document.getElementById("navigationGrid");
 var start = (gridTable.querySelector(".cell-start"))[0];
 var startBtn = document.getElementById("startBtn");
 var finish;
