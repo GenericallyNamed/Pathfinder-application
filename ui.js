@@ -8,7 +8,7 @@
  * 
  */
 
-
+console.log("ui.js run");
 
 const controller = new AbortController();
 
