@@ -181,6 +181,7 @@ var colMarginGaps;
 var rowMarginGaps;
 
 function squareTable() {
+    var gridTable = document.getElementById("navigationGrid");
     var individualCellWidth = parseLength(getComputedStyle(gridTable.rows[0].cells[0]).width);
     var individualCellHeight = parseLength(getComputedStyle(gridTable.rows[0].cells[0]).height);
     var gridParentDimensions = parseLength(getComputedStyle(gridTable.parentNode).width) < parseLength(getComputedStyle(gridTable).width) + individualCellWidth;
