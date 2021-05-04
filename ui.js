@@ -8,7 +8,6 @@
  * 
  */
 
-console.log("ui.js run");
 
 const controller = new AbortController();
 
@@ -32,22 +31,15 @@ var totalRows = gridTable.getElementsByTagName("tr").length;
 var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
 
 squareTable();
-setTimeout(function(){
-    squareTable();
-}, 1000);
-
 
 resetBtn.addEventListener("click", function(){
     resetGrid();
 });
 var gridTable = document.getElementById("navigationGrid");
-//gridTable.setAttribute("clicked",false); //@unused
 gridTable.clicked = false;
-//gridTable.setAttribute("issearching",false);
 gridTable.issearching = false;
 gridTable.moveelementclasses = "";
 var isMovingCell = false;
-//document.getElementsByClassName("cell-start")[0].test = true;
 window.addEventListener("resize",function(){
     squareTable();
 });
@@ -57,10 +49,8 @@ setCoordinates();
 var maximumHeight = (getComputedStyle(gridTable).height).substring(0, (getComputedStyle(gridTable).height).indexOf("px"));
 gridTable.style.maxHeight = maximumHeight+"px";
 gridTable.style.maxWidth = maximumHeight+"px";
-console.log("LLLLLL");
 for(var i = 0; i < totalRows; i++) {
     for(var j = 0; j < totalColumns; j++) {
-        console.log("testing123");
         let elem = gridTable.rows[i].cells[j];
         elem.resetclasses = elem.className;
         addCellEventListeners(elem);
@@ -70,26 +60,24 @@ for(var i = 0; i < totalRows; i++) {
 
 
 
-function cellClicked(x,y) { console.log("<<<< cellClicked() >>>>");
+function cellClicked(x,y) { 
     var selectedCell = gridTable.rows[y].cells[x];
-    //var cellType = gridTable.getAttribute("cellToMove");
     cellType = gridTable.cellToMove;
     var isStart = selectedCell.classList.contains(cellType);
     var isFinish = selectedCell.classList.contains("cell-finish"); 
         if(!isStart && !isFinish) {
             toggleWall(selectedCell);
         } else if (isStart || isFinish) {
-            //var searchState = gridTable.getAttribute("issearching");
             searchState = gridTable.issearching;
             if(searchState == true) {
                 endSearch(x, y);
             } else if (searchState == false) {
                 beginSearch(selectedCell, x, y);
             } else {
-                console.log("No worky");
+                console.log("Error");
             }
         } else {
-            console.log("There has been an error. Sorry.");
+            console.log("Error");
         }
     for(var i = 0; i < totalRows; i++) {
         for(var j = 0; j < totalColumns; j++) {
@@ -98,11 +86,9 @@ function cellClicked(x,y) { console.log("<<<< cellClicked() >>>>");
     }
 }
 
-function endSearch(x, y) { console.log("<<<< endSearch() >>>>");
-    //gridTable.setAttribute("issearching",false);
+function endSearch(x, y) { 
     gridTable.rows[gridTable.originY].cells[gridTable.originX].isorigin = false;
     gridTable.issearching = false;
-    //var cellType = gridTable.getAttribute("cellToMove");
     var cellType = gridTable.cellToMove;
     var originElement;
     var selectedCell = gridTable.rows[y].cells[x];
@@ -111,7 +97,6 @@ function endSearch(x, y) { console.log("<<<< endSearch() >>>>");
         originElement.className = "cell-unvisited";
     } else {
         originElement = (gridTable.querySelectorAll("." + cellType))[0];
-        //originElement.className = gridTable.getAttribute("moveelementclasses");
         originElement.className = gridTable.moveelementclasses;
     }
     for(var i = 0; i < totalRows; i++ ) {
@@ -121,11 +106,9 @@ function endSearch(x, y) { console.log("<<<< endSearch() >>>>");
             }  
         }
     }
-    //originElement.removeAttribute("isorigin");
     originElement.isorigin = false;
     if(gridTable.originX != x && gridTable.originY != y) {
-        originElement.className = "cell-unvisited"
-        //selectedCell.removeAttribute('originalclasses');
+        originElement.className = "cell-unvisited";
         if(selectedCell.isWall == true) {
             selectedCell.originalclasses = "cell-wall cell-unvisited";
         } else {
@@ -136,16 +119,12 @@ function endSearch(x, y) { console.log("<<<< endSearch() >>>>");
 
 }
 
-function beginSearch(cell, x, y) { console.log("<<<< beginSearch() >>>>");
-    //gridTable.setAttribute("moveelementclases",cell.className);
+function beginSearch(cell, x, y) { 
     gridTable.moveelementclasses = cell.classname;
     gridTable.originX = cell.x;
     gridTable.originY = cell.y;
-    //gridTable.setAttribute("issearching",true);
     gridTable.issearching = true;
-    //var cellType = gridTable.getAttribute("cellToMove");
     var cellType = gridTable.cellToMove;
-    //cell.setAttribute("isorigin",true);
     cell.isorigin = true;
     gridTable.originElementClasses = cell.className;
     if(cell.classList.contains("cell-start")) {
@@ -192,16 +171,12 @@ function squareTable() {
     var gridParentDimensions = parseLength(getComputedStyle(gridTable.parentNode).width) < parseLength(getComputedStyle(gridTable).width) + individualCellWidth;
     
     document.getElementById("interface").style.width = window.innerWidth+"px";
-    console.log("squareTable() run");
-    //var interface = document.getElementById("interface");
-    //var interfaceWidth = parseInt((getComputedStyle(interface).width).substring(0,((getComputedStyle(interface).width).indexOf("px"))));
     height = parseInt((getComputedStyle(gridTable).height).substring(0,((getComputedStyle(gridTable).height).indexOf("px"))));
     width = parseInt((getComputedStyle(gridTable).width).substring(0,((getComputedStyle(gridTable).width).indexOf("px"))));
     colMarginGaps = totalColumns+1;
     rowMarginGaps = totalRows+1;
     var cellWidth = (width-colMarginGaps)/totalColumns;
     var cellHeight = (height-rowMarginGaps)/totalRows;
-    console.log("gridParentDimensions = " + gridParentDimensions);
     if(gridParentDimensions == false) {
         if(totalColumns < totalRows) {
             var newCellWidth = cellHeight;
@@ -211,8 +186,6 @@ function squareTable() {
             var newCellWidth = cellHeight;
             var newWidth = newCellWidth * totalColumns + colMarginGaps;
             gridTable.style.maxWidth = newWidth+"px";
-        } else if (totalColumns == totalRows) {
-            //var 
         }
         gridTable.style.maxHeight = "100%";
     } else if(gridParentDimensions == true) {
@@ -221,14 +194,12 @@ function squareTable() {
             var newWidth = newCellWidth * totalColumns + colMarginGaps;
             gridTable.style.maxWidth = newWidth + "px";
         }
-        //if(cellWidth != cellHeight && (cellHeight * totalColumns + colMarginGaps) >= interfaceWidth) {
-            var newCellHeight = cellWidth;
-            var newHeight = newCellHeight * totalRows + rowMarginGaps;
-            gridTable.style.maxHeight = newHeight+"px";
-            console.log("settingNewHeight = " + newHeight);
+    
+        var newCellHeight = cellWidth;
+        var newHeight = newCellHeight * totalRows + rowMarginGaps;
+        gridTable.style.maxHeight = newHeight+"px";
         
     }
-    //gridTable.style.maxHeight = height+"px";
 }
 
 function addRow() {
@@ -242,6 +213,7 @@ function addRow() {
         let newCell = document.createElement('td');
         newCell.innerHTML = "<div class='cell'></div>";
         newCell.classList.add("cell-unvisited");
+        newCell.resetclasses = newCell.className;
         let row = gridTable.getElementsByTagName("tbody")[0].rows[totalRows-1];
         row.appendChild(newCell);
     }
@@ -258,6 +230,7 @@ function addColumn() {
         let newCell = document.createElement("td");
         newCell.innerHTML = "<div class='cell'></div>";
         newCell.classList.add("cell-unvisited");
+        newCell.resetclasses = newCell.className;
         gridTable.getElementsByTagName("tbody")[0].rows[i].appendChild(newCell);
     }
     setCoordinates();
@@ -271,9 +244,7 @@ function addColumn() {
 function setCoordinates() {
     for(i = 0; i < totalRows; i++) {
         for(j = 0; j < totalColumns; j++) {
-            //gridTable.rows[i].cells[j].setAttribute("x",j);
             gridTable.rows[i].cells[j].x = j;
-            //gridTable.rows[i].cells[j].setAttribute("y",i);
             gridTable.rows[i].cells[j].y = i
         }
     }
@@ -282,28 +253,28 @@ function setCoordinates() {
 
 function removeRow() {
     var table = gridTable.getElementsByTagName("tbody")[0];
-    var containsRequiredCell = false;
+    var containsStartCell = false;
+    var containsFinishCell = false;
     if(totalRows > 5) {
         for(var i = 0; i < totalColumns; i++) {
-            if(table.rows[totalRows-1].cells[i].classList.contains("cell-start") || table.rows[totalRows-1].cells[i].classList.contains("cell-finish")) {
-                containsRequiredCell = true;
+            if(table.rows[totalRows-1].cells[i].classList.contains("cell-start")) {
+                 containsStartCell = true;
+            }
+            if(table.rows[totalRows-1].cells[i].classList.contains("cell-finish")) {
+                containsFinishCell = true;
             }
         }
-        if(containsRequiredCell == false) {
+        if(containsStartCell == false && containsFinishCell == false) {
             table.rows[totalRows-1].remove();
             totalRows--;
         } else {
-            var finishCell = (gridTable.querySelectorAll(".cell-finish"))[0];
-            var startCell = (gridTable.querySelectorAll(".cell-finish"))[0];
-            //if(parseInt(finishCell.getAttribute("y")) == totalRows-1) {
-            if(finishCell.y == totalRows-1) {
-                table.rows[totalRows-2].cells[finishCell.x].className = table.rows[totalRows-1].cells[finishCell.x].className;
-                //table.rows[totalRows-2].cells[parseInt(finishCell.getAttribute("x"))].className = table.rows[totalRows-1].cells[parseInt(finishCell.getAttribute("x"))].className;
-            }
-            if(startCell.y == totalRows -1) {
-            //if(parseInt(startCell.getAttribute("y")) == totalRows-1) {
+            if(containsStartCell) {
+                var startCell = (gridTable.querySelectorAll(".cell-finish"))[0];
                 table.rows[totalRows-2].cells[startCell.x].className = table.rows[totalRows-1].cells[startCell.x].className;
-                //table.rows[totalRows-2].cells[parseInt(startCell.getAttribute("x"))].className = table.rows[totalRows-1].cells[parseInt(startCell.getAttribute("x"))].className;
+            }
+            if(containsFinishCell) {
+                var finishCell = (gridTable.querySelectorAll(".cell-finish"))[0];    
+                table.rows[totalRows-2].cells[finishCell.x].className = table.rows[totalRows-1].cells[finishCell.x].className;
             }
             table.rows[totalRows-1].remove();
             totalRows--;
@@ -316,6 +287,24 @@ function removeRow() {
 
 function removeColumn() {
     if(totalColumns > 5) {
+        var startCell = document.querySelectorAll(".cell-start")[0];
+        var finishCell = document.querySelectorAll(".cell-finish")[0];
+        var containsStartCell = false;
+        if(startCell.x == totalColumns-1) {
+            containsStartCell = true;
+        }
+        var containsFinishCell = false;
+        if(finishCell.x == totalColumns-1) {
+            containsFinishCell = true;
+        }
+        if(containsStartCell == true) {
+            var newX = startCell.x - 1;
+            gridTable.rows[startCell.y].cells[newX].className = startCell.className;
+        }
+        if(containsFinishCell == true) {
+            var newX = finishCell.x - 1;
+            gridTable.rows[finishCell.y].cells[newX].className = finishCell.className;
+        }
         for(var i = 0; i < totalRows; i++) {
             gridTable.rows[i].cells[totalColumns-1].remove();
         }
@@ -340,36 +329,19 @@ function setOriginalClasses(elem) {
 
 
 function addCellEventListeners(e) {
-    //var i = parseInt(e.getAttribute("y"));
     i = e.y;
-    //var j = parseInt(e.getAttribute("x"));
     j = e.x;
-    //var table = gridTable.getElementsByTagName("tbody");
     gridTable.rows[i].cells[j].addEventListener("mouseup",function(){
-        /*for(var i = 0; i < totalRows; i++) {
-            for(var j = 0; j < totalColumns; j++) {
-                gridTable.rows[i].cells[j].getElementsByClassName("cell")[0].innerHTML = "originalclasses = " + gridTable.rows[i].cells[j].originalclasses + " -> isorigin = " + gridTable.rows[i].cells[j].isorigin;
-            }
-        }*/
         setOriginalClasses(this);
         if(this.classList.contains("cell-start")) {
-            //gridTable.setAttribute("cellToMove","cell-start");
             gridTable.cellToMove = "cell-start";
         } else {
-            //gridTable.setAttribute("cellToMove","cell-finish");
             gridTable.cellToMove = "cell-finish"
         }
-        //var cellType = gridTable.getAttribute("cellToMove");
         var cellType = gridTable.cellToMove;
-        //var x = parseInt(this.getAttribute("x"));
         var x = this.x;
-        //var y = parseInt(this.getAttribute("y"));
         var y = this.y;
-        console.log("TEST LOL");
         if(this.classList.contains(cellType) && gridTable.issearching == false) { 
-        //if(this.classList.contains(cellType) && gridTable.getAttribute("issearching")=="false") {
-            console.log("1234 TEST 1234");
-            //gridTable.setAttribute("moveelementclasses",this.className);
             gridTable.moveelementclasses = this.className;
             gridTable.setAttribute("moveelementclasses", gridTable.moveelementclasses);
             this.isorigin = true;
@@ -378,42 +350,25 @@ function addCellEventListeners(e) {
         
     });
     gridTable.rows[i].cells[j].addEventListener("mouseenter",function(){
-        /*for(var i = 0; i < totalRows; i++) {
-            for(var j = 0; j < totalColumns; j++) {
-                gridTable.rows[i].cells[j].getElementsByClassName("cell")[0].innerHTML = "originalclasses = " + gridTable.rows[i].cells[j].originalclasses + " -> isorigin = " + gridTable.rows[i].cells[j].isorigin;
-            }
-        }*/
-        //this.setAttribute("originalClasses",this.className);
         this.originalclasses = this.className;
-        //var x = parseInt(this.getAttribute("x"));
         var x = this.x;
-        //var y = parseInt(this.getAttribute("y"));
         var y = this.y;
-        //gridTable.rows[y].cells[x].setAttribute("hovered",true);
         gridTable.rows[y].cells[x].hovered = true;
         if(gridTable.issearching == true) {
             gridTable.originalclasses = this.className;
             gridTable.moveelementclasses = gridTable.getAttribute("moveelementclasses");
-            //if(gridTable.getAttribute("isSearching")=='true') {  
-            console.log("original classlist = " + this.className);
             if((gridTable.cellToMove == "cell-start" && this.classList.contains("cell-finish")) || (gridTable.cellToMove == "cell-finish" && this.classList.contains("cell-start"))) {
-            //if((gridTable.getAttribute("moveElementClasses").indexOf("cell-start") != 0 && this.classList.contains("cell-start")) || (gridTable.getAttribute("moveElementClasses").indexOf("cell-finish") != 0 && this.classList.contains("cell-finish"))) {
                 this.className = "error";
             } else {
                 this.className = gridTable.moveelementclasses;
-                //this.className = gridTable.getAttribute("moveElementClasses");
             }
         }
         
     });
     gridTable.rows[i].cells[j].addEventListener("mouseleave",function(){
-        //var x = parseInt(this.getAttribute("x"));
         var x = this.x;
-        //var y = parseInt(this.getAttribute("y"));
         var y = this.y;
-        //gridTable.rows[y].cells[x].setAttribute("hovered",false);
         gridTable.rows[y].cells[x].hovered = false;
-        console.log("left cell.....");
         if(gridTable.issearching == true) {
             if(this.isorigin == true) {
                 for(var i = 0; i < totalRows; i++) {
@@ -423,7 +378,6 @@ function addCellEventListeners(e) {
                         }
                     }
                 }
-                //if(this.getAttribute("isorigin")=="true" && gridTable.getAttribute("issearching") == "true") {
                 if(this.originalclasses.indexOf(gridTable.originElement) != -1) {
                     this.className = "none";
                 } else {
@@ -431,42 +385,21 @@ function addCellEventListeners(e) {
                 }
             } else {
                 this.className = this.originalclasses;
-                //this.originalclasses = this.className;
-            }/* 
-            else if(this.originalclasses.indexOf("cell-start") == -1) {
-                //} else if(!(this.classList.contains("cell-start")) && gridTable.getAttribute("issearching")=="true"){
-                this.className = this.originalclasses;
-                //this.className = this.getAttribute("originalclasses");
-                //this.removeAttribute("originalclasses");
-                this.originalclasses = "cell-unvisited";
-            }*/
+            }
             var containsOriginalClasses = gridTable.querySelectorAll("[originalclasses]");
             for(var i = 0; i < containsOriginalClasses.length; i++) {
-                //console.log("isorigin = " + containsOriginalClasses[i].getAttribute("isorigin"));
-                console.log("isorigin = " + containsOriginalClasses[i].isOrigin);
                 if(containsOriginalClasses[i].isorigin != true && gridTable.issearching == true) {
-                    //if(containsOriginalClasses[i].getAttribute("isorigin")!="true" && gridTable.getAttribute("issearching")=="true") {
                     containsOriginalClasses[i].className = containsOriginalClasses[i].originalclasses;
                     delete containsOriginalClasses[i].originalclasses;
-                    //containsOriginalClasses[i].className = containsOriginalClasses[i].getAttribute("originalclasses");
-                    //containsOriginalClasses[i].removeAttribute("originalclasses");
                 } else {
                     delete containsOriginalClasses[i].originalclasses;
-                    //containsOriginalClasses[i].removeAttribute("originalclasses");
                 }
             }
         } else if(gridTable.issearching == false) {
-            //if(gridTable.getAttribute("issearching")=="false"){
             var containsOriginalClasses = gridTable.querySelectorAll("[originalclasses]");
             for(var i = 0; i < containsOriginalClasses.length; i++) {
-                delete containsOriginalClasses[i].originalclasses
-                //containsOriginalClasses[i].removeAttribute("originalclasses");
+                delete containsOriginalClasses[i].originalclasses;
             }    
-        }
-        
-        if(gridTable.issearching == true) {
-        //if(gridTable.getAttribute("issearching")=="true"){
-            
         }
         
     });
@@ -509,25 +442,21 @@ function pushError(errStr) {
 }
 
 addColBtn.addEventListener("click",function(){
-    console.log("add columns");
     addColumn();
     var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
     colCounter.innerText = totalColumns + " columns";
 });
 addRowBtn.addEventListener("click",function(){
-    console.log("add rows");
     addRow();
     var totalRows = gridTable.getElementsByTagName("tr").length;
     rowCounter.innerText = totalRows + " rows";
 });
 decreaseColBtn.addEventListener("click",function(){
-    console.log("<<<<<<<<<<<<<<decrease columns>>>>>>>>>>>>>");
     removeColumn();
     var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
     colCounter.innerText = totalColumns + " columns";
 });
 decreaseRowBtn.addEventListener("click",function(){
-    console.log("<<<<<<<<<<<<<<decrease rows>>>>>>>>>>>>>");
     removeRow();
     var totalRows = gridTable.getElementsByTagName("tr").length;
     rowCounter.innerText = totalRows + " rows";
