@@ -1,9 +1,23 @@
+/**
+ * @title ripple.js
+ * @description This contains the necessary code for generating the ripple effect seen when clicking on buttons.
+ * 
+ * @author Alex Shandilis
+ * @version 5/1/2021
+ * 
+ */
+
 var rippleBtns = document.getElementsByClassName("addRippleBtn");
 
+/**
+ * @name setRippleDimensions
+ * @param {Object} elem 
+ * @purpose Used to set the dimensions of the rippl
+ */
 function setRippleDimension(elem) {
     var dimensionToUse;
-    var parentWidth = elem.width();
-    var parentHeight = elem.width();
+    var parentWidth = elem.width(); //sets the width of the parent
+    var parentHeight = elem.height(); //sets the height 
     if(parentWidth > parentHeight){
         dimensionToUse = parentWidth;
     }
@@ -13,12 +27,16 @@ function setRippleDimension(elem) {
     return dimensionToUse
 }
 
+/**
+ * @name ripple
+ * @param {Number} id 
+ * @param {String} rgb 
+ * @purpose This method creates the ripple effect seen on buttons.
+ */
 function ripple(id, rgb) {    
     var elem = document.getElementById(id);
     elem.style.overflow = "hidden";
     var e = window.event;
-    var mouseX = e.clientX;
-    var mouseY = e.clientY;
     
     var parentWidth = parseInt((getComputedStyle(elem).width).substring(0,(getComputedStyle(elem).width).length-2));
     var parentHeight = parseInt((getComputedStyle(elem).height).substring(0,(getComputedStyle(elem).height).length-2));
@@ -30,8 +48,6 @@ function ripple(id, rgb) {
     var rippleObject = document.createElement("div");
     rippleContainer.appendChild(rippleObject);
     rippleObject.style.position = "relative";
-    var elemHeight = parseLength(getComputedStyle(elem).height);
-    var elemWidth = parseLength(getComputedStyle(elem).width);
     var parentObject = rippleObject.parentElement;
     var x = e.clientX - parentObject.getBoundingClientRect().left;
     var y = e.clientY - parentObject.getBoundingClientRect().top;
@@ -46,7 +62,6 @@ function ripple(id, rgb) {
     rippleObject.style.zIndex = 1;
     rippleObject.classList.add("rippleEffect");
     let object = rippleObject;
-    var rippleToHide = document.getElementsByClassName('rippleEffect');
     rippleObject.rippleStatus = "active"
     rippleObject.addEventListener("mouseup", function() {
         if(rippleObject.rippleStatus == "active") {
@@ -72,8 +87,6 @@ function ripple(id, rgb) {
 
 for (var i = 0; i < rippleBtns.length; i++) {
     var currentElement = rippleBtns[i];
-    let btnNameID = currentElement.getAttribute('id');
-    let rippleColor =  currentElement.getAttribute('rippleColor');
     currentElement.addEventListener('mousedown', function() {
         var color = this.getAttribute("rippleColor");
         var nameID = this.getAttribute("id");

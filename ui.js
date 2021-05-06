@@ -4,7 +4,7 @@
  * user interface and experience.
  * 
  * @author Alex Shandilis
- * @version 5/3/2021
+ * @version 5/6/2021
  * 
  */
 
@@ -49,11 +49,17 @@ gridTable.style.maxWidth = maximumHeight+"px";
 for(var i = 0; i < totalRows; i++) {
     for(var j = 0; j < totalColumns; j++) {
         let elem = gridTable.rows[i].cells[j];
-        elem.resetclasses = elem.className;
+        elem.resetClasses = elem.className;
         addCellEventListeners(elem);
     }
 }
 
+/**
+ * @name cellClicked
+ * @param {Number} x    x coordinate of clicked cell
+ * @param {Number} y    y coordinate of clicked cell 
+ * @purpose Runs if the user clicks a cell on the grid
+ */
 function cellClicked(x,y) { 
     var selectedCell = gridTable.rows[y].cells[x];
     cellType = gridTable.cellToMove;
@@ -80,6 +86,12 @@ function cellClicked(x,y) {
     }
 }
 
+/**
+ * @name endSearch
+ * @param {Number} x    New x coordinate
+ * @param {Number} y    New y coordinate 
+ * @purpose End the search procedure when the user clicks on a destination cell
+ */
 function endSearch(x, y) { 
     gridTable.rows[gridTable.originY].cells[gridTable.originX].isorigin = false;
     gridTable.issearching = false;
@@ -104,21 +116,25 @@ function endSearch(x, y) {
     if(gridTable.originX != x && gridTable.originY != y) {
         originElement.className = "cell-unvisited";
         if(selectedCell.isWall == true) {
-            selectedCell.originalclasses = "cell-wall cell-unvisited";
+            selectedCell.originalClasses = "cell-wall cell-unvisited";
         } else {
-            selectedCell.originalclasses = "cell-unvisited";
+            selectedCell.originalClasses = "cell-unvisited";
         }
     }
     
 
 }
 
-function beginSearch(cell, x, y) { 
+/**
+ * @name beginSearch
+ * @param {Object} cell The cell object being moved
+ * @purpose Initiate searching procedure for new location of cell.
+ */
+function beginSearch(cell) { 
     gridTable.moveelementclasses = cell.classname;
-    gridTable.originX = cell.x;
+    gridTable.originX = cell.x; 
     gridTable.originY = cell.y;
     gridTable.issearching = true;
-    var cellType = gridTable.cellToMove;
     cell.isorigin = true;
     gridTable.originElementClasses = cell.className;
     if(cell.classList.contains("cell-start")) {
@@ -128,37 +144,55 @@ function beginSearch(cell, x, y) {
     }
     for(var i = 0; i < totalRows; i++ ) {
         for(var j = 0; j < totalColumns; j++) {
-            if(!(j == x && i == y)) {
+            if(!(j == cell.x && i == cell.y)) {
                 gridTable.rows[i].cells[j].classList.add("dim");
             }  
         }
     }
 }
 
+/**
+ * @name toggleWall
+ * @param {Object} cell 
+ * @purpose Toggle cell walls on or off
+ */
 function toggleWall(cell) {
-    if(cell.classList.contains("cell-wall")) {
-        cell.classList.remove('cell-wall');
-        cell.isWall = false;
+    if(cell.classList.contains("cell-wall")) { //Checks if the given cell is a wall
+        cell.classList.remove('cell-wall'); //Removes the cell from the class "cell-wall"
+        cell.isWall = false; //Sets the property of the cell "isWall" to false
     } else {
-        cell.classList.add('cell-wall');
-        cell.isWall = true;
+        cell.classList.add('cell-wall'); //Adds the cell to the class "cell-wall"
+        cell.isWall = true; //Sets the property of the cell "isWall" to false
     }
-    cell.originalclasses = cell.className;
-    cell.resetclasses = cell.className;
+    cell.originalClasses = cell.className;
+    cell.resetClasses = cell.className;
 }
 
+/**
+ * @name parseLength
+ * @param {String} l 
+ * @returns {Number} length value without added "px"
+ * @purpose to take a length string (i.e. '100 px') and return simply 100 as a number
+ */
 function parseLength(l) {
     return parseInt((l).substring(0,l.indexOf("px")));
 }
 
+
+/**
+ * @name squareTable
+ * @purpose Updates the dimensions of the table to be sure that it fits on the user's screen. Runs
+ * when the window/viewport changes shape as well as when the user modifies the dimensions of the
+ * grid.
+ */
 function squareTable() {
-    var gridTable = document.getElementById("navigationGrid");
+    var gridTable = document.getElementById("navigationGrid"); //First initializes all relevant variables
     var totalRows = gridTable.getElementsByTagName("tr").length;
     var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
     var individualCellWidth = parseLength(getComputedStyle(gridTable.rows[0].cells[0]).width);
     var individualCellHeight = parseLength(getComputedStyle(gridTable.rows[0].cells[0]).height);
     var gridParentDimensions = parseLength(getComputedStyle(gridTable.parentNode).width) < parseLength(getComputedStyle(gridTable).width) + individualCellWidth;
-    
+    //gridParentDimensions is true if the addition of a new column would make the width of the table greater than the width of the viewport (screen).
     document.getElementById("interface").style.width = window.innerWidth+"px";
     height = parseInt((getComputedStyle(gridTable).height).substring(0,((getComputedStyle(gridTable).height).indexOf("px"))));
     width = parseInt((getComputedStyle(gridTable).width).substring(0,((getComputedStyle(gridTable).width).indexOf("px"))));
@@ -191,45 +225,58 @@ function squareTable() {
     }
 }
 
+/**
+ * @name addRow
+ * @purpose add row to grid
+ */
 function addRow() {
-    let newRow = document.createElement('tr');
+    let newRow = document.createElement('tr'); //first creates tr element to create row
     gridTable.getElementsByTagName("tbody")[0].appendChild(newRow);
     totalRows++;
-    var y = totalRows - 1;
     var x;
-    for(var i = 0; i < totalColumns; i++) {
+    for(var i = 0; i < totalColumns; i++) { //for-loop adds new row of cells
         x = i;
         let newCell = document.createElement('td');
         newCell.innerHTML = "<div class='cell'></div>";
         newCell.classList.add("cell-unvisited");
-        newCell.resetclasses = newCell.className;
+        newCell.resetClasses = newCell.className;
         let row = gridTable.getElementsByTagName("tbody")[0].rows[totalRows-1];
-        row.appendChild(newCell);
+        row.appendChild(newCell); //appends new cells to row
     }
-    setCoordinates();
-    for(var a = 0; a < totalColumns; a++) {
+    setCoordinates(); //sets the coordinates for the new cells
+    for(var a = 0; a < totalColumns; a++) { //adds event listeners to cells
         let currentCell = gridTable.rows[totalRows-1].cells[a];
         addCellEventListeners(currentCell);
     }
+    squareTable(); //squares the table dimensions
 }
 
+/**
+ * @name addColumn
+ * @purpose add column to grid
+ */
 function addColumn() {
-    totalColumns++;
-    for(var i = 0; i < totalRows; i++ ) {
+    totalColumns++; //increments totalColumns
+    for(var i = 0; i < totalRows; i++ ) { //adds single cell to every row to make a column
         let newCell = document.createElement("td");
         newCell.innerHTML = "<div class='cell'></div>";
         newCell.classList.add("cell-unvisited");
-        newCell.resetclasses = newCell.className;
+        newCell.resetClasses = newCell.className;
         gridTable.getElementsByTagName("tbody")[0].rows[i].appendChild(newCell);
     }
-    setCoordinates();
-    for(var i = 0; i < totalRows; i++ ) {
+    setCoordinates(); //updates coordinates
+    for(var i = 0; i < totalRows; i++ ) { //updates event listeners
         let cell = gridTable.rows[i].cells[totalColumns-1];
         addCellEventListeners(cell);
     }
-    squareTable();
+    squareTable(); //squares the table
 }
 
+/**
+ * @name setCoordinates
+ * @purpose Sets the coordinates for every cell in the grid. Called when the table is created and
+ * when the user updates the dimensions of the grid.
+ */
 function setCoordinates() {
     for(i = 0; i < totalRows; i++) {
         for(j = 0; j < totalColumns; j++) {
@@ -237,9 +284,12 @@ function setCoordinates() {
             gridTable.rows[i].cells[j].y = i
         }
     }
-    squareTable();
 }
 
+/**
+ * @name removeRow
+ * @purpose Remove row from grid
+ */
 function removeRow() {
     var table = gridTable.getElementsByTagName("tbody")[0];
     var containsStartCell = false;
@@ -274,6 +324,10 @@ function removeRow() {
     squareTable();
 }
 
+/**
+ * @name removeColumn
+ * @purpose remove column from grid (at end)
+ */
 function removeColumn() {
     if(totalColumns > 5) {
         var startCell = document.querySelectorAll(".cell-start")[0];
@@ -304,21 +358,35 @@ function removeColumn() {
     }
 }
 
+/**
+ * @name setOriginalClasses
+ * @param {Object} elem 
+ * @purpose takes a given element from the DOM and based on certain conditions sets its 
+ * originalClasses property based on what type of cell it is. This property is used so that the
+ * program knows what type of cell it is during the search process (when the user is moving the 
+ * start or finish cell).
+ */
 function setOriginalClasses(elem) {
-    if (gridTable.issearching == true && gridTable.originElement == "cell-start" && elem.classList.contains("cell-finish") == true) {
-        elem.originalclasses = "cell-finish"; 
-    } else if(gridTable.issearching == true && gridTable.originElement == "cell-finish" && elem.classList.contains("cell-start") == true) {
-        elem.originalclasses = "cell-start"; 
-    } else if(elem.isWall == true) {
-        elem.originalclasses = "cell-wall cell-unvisited";
-    } else if(elem.isWall == false) {
-        elem.originalclasses = "cell-unvisited";
+    if (gridTable.issearching == true && gridTable.originElement == "cell-start" && elem.classList.contains("cell-finish") == true) { //checks if it is a finish cell
+        elem.originalClasses = "cell-finish"; 
+    } else if(gridTable.issearching == true && gridTable.originElement == "cell-finish" && elem.classList.contains("cell-start") == true) { //checks if it is a start cell
+        elem.originalClasses = "cell-start"; 
+    } else if(elem.isWall == true) { //checks if it is a wall
+        elem.originalClasses = "cell-wall cell-unvisited";
+    } else if(elem.isWall == false) { //checks if it is not a wall
+        elem.originalClasses = "cell-unvisited";
     } 
 }
 
-function addCellEventListeners(e) {
-    i = e.y;
-    j = e.x;
+/**
+ * @name addCellEventListeners
+ * @param {object} elem 
+ * @purpose When the grid is first created, or new cells are added to the grid, this function is
+ * used to add the appropriate event listeners to those cells.
+ */
+function addCellEventListeners(elem) {
+    i = elem.y;
+    j = elem.x;
     gridTable.rows[i].cells[j].addEventListener("mouseup",function(){
         setOriginalClasses(this);
         if(this.classList.contains("cell-start")) {
@@ -338,12 +406,12 @@ function addCellEventListeners(e) {
         
     });
     gridTable.rows[i].cells[j].addEventListener("mouseenter",function(){
-        this.originalclasses = this.className;
+        this.originalClasses = this.className;
         var x = this.x;
         var y = this.y;
         gridTable.rows[y].cells[x].hovered = true;
         if(gridTable.issearching == true) {
-            gridTable.originalclasses = this.className;
+            gridTable.originalClasses = this.className;
             gridTable.moveelementclasses = gridTable.getAttribute("moveelementclasses");
             if((gridTable.cellToMove == "cell-start" && this.classList.contains("cell-finish")) || (gridTable.cellToMove == "cell-finish" && this.classList.contains("cell-start"))) {
                 this.className = "error";
@@ -366,47 +434,58 @@ function addCellEventListeners(e) {
                         }
                     }
                 }
-                if(this.originalclasses.indexOf(gridTable.originElement) != -1) {
+                if(this.originalClasses.indexOf(gridTable.originElement) != -1) {
                     this.className = "none";
                 } else {
                     this.isorigin = false;
                 }
             } else {
-                this.className = this.originalclasses;
+                this.className = this.originalClasses;
             }
-            var containsOriginalClasses = gridTable.querySelectorAll("[originalclasses]");
+            var containsOriginalClasses = gridTable.querySelectorAll("[originalClasses]");
             for(var i = 0; i < containsOriginalClasses.length; i++) {
                 if(containsOriginalClasses[i].isorigin != true && gridTable.issearching == true) {
-                    containsOriginalClasses[i].className = containsOriginalClasses[i].originalclasses;
-                    delete containsOriginalClasses[i].originalclasses;
+                    containsOriginalClasses[i].className = containsOriginalClasses[i].originalClasses;
+                    delete containsOriginalClasses[i].originalClasses;
                 } else {
-                    delete containsOriginalClasses[i].originalclasses;
+                    delete containsOriginalClasses[i].originalClasses;
                 }
             }
         } else if(gridTable.issearching == false) {
-            var containsOriginalClasses = gridTable.querySelectorAll("[originalclasses]");
+            var containsOriginalClasses = gridTable.querySelectorAll("[originalClasses]");
             for(var i = 0; i < containsOriginalClasses.length; i++) {
-                delete containsOriginalClasses[i].originalclasses;
+                delete containsOriginalClasses[i].originalClasses;
             }    
         }
         
     });
 }
 
+/**
+ * @name setResetClasses
+ * @purpose This method is used to set the property resetClasses for every element based on the
+ * value of the element's className. The value of the resetClasses property is used for when the
+ * user resets the grid or the program calls the resetGrid method.
+ */
 function setResetClasses() {
     for(var i = 0; i < totalRows; i++ ) {
         for(var j = 0; j < totalColumns; j++ ) {
             let elem = gridTable.rows[i].cells[j];
-            elem.resetclasses = elem.className;
+            elem.resetClasses = elem.className;
         }
     }
 }
+
+/**
+ * @name resetGrid
+ * @purpose add row to grid
+ */
 
 function resetGrid() {
     for(var i = 0; i < totalRows; i++) {
         for(var j = 0; j < totalColumns; j++) {
             let elem = gridTable.rows[i].cells[j];
-            elem.className = elem.resetclasses;
+            elem.className = elem.resetClasses;
             elem.researchclasses = elem.className;
             delete elem.prevX;
             delete elem.prevY;
@@ -418,6 +497,8 @@ function resetGrid() {
     setResetClasses();
     gridTable.isRunning = false;
 }
+
+
 
 addColBtn.addEventListener("click",function(){
     addColumn();
