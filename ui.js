@@ -258,7 +258,7 @@ function removeRow() {
             totalRows--;
         } else {
             if(containsStartCell) {
-                var startCell = (gridTable.querySelectorAll(".cell-finish"))[0];
+                var startCell = (gridTable.querySelectorAll(".cell-start"))[0];
                 table.rows[totalRows-2].cells[startCell.x].className = table.rows[totalRows-1].cells[startCell.x].className;
             }
             if(containsFinishCell) {
