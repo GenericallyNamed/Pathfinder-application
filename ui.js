@@ -27,16 +27,15 @@ var totalRows = gridTable.getElementsByTagName("tr").length;
 var totalColumns = gridTable.rows[0].getElementsByTagName("td").length;
 colCounter.innerText = totalColumns + " columns";
 rowCounter.innerText = totalRows + " rows";
-squareTable();
+squareTable(); //Updates the table dimensions to fit within the constraints of the size of the screen.
 
-resetBtn.addEventListener("click", function(){
+resetBtn.addEventListener("click", function(){ 
     resetGrid();
 });
-var gridTable = document.getElementById("navigationGrid");
-gridTable.clicked = false;
+var gridTable = document.getElementById("navigationGrid"); //the table that contains all the cells of the grid is defined as "gridTable"
+gridTable.clicked = false; //all of these properties are added to the "gridTable"
 gridTable.issearching = false;
 gridTable.moveelementclasses = "";
-var isMovingCell = false;
 window.addEventListener("resize",function(){
     squareTable();
 });

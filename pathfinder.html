@@ -1,8 +1,18 @@
-<!DOCTYPE html>
 <!--
-    NOTE:
-    All scalable vector graphics contained in the "resources" folder are free-to-use icons retrieved from fonts.google.com/icons
+    TITLE: Pathfinder
+    AUTHOR: Alex Shandilis
+    VERSION: 5/6/2021
+    DESCRIPTION: Simple pathfinder program using a grid table.
+
+    THIRD-PARTY CREDITS
+    All scalable vector graphic (SVG) iconography were retrieved from the open-source icon repository at fonts.google.com/icons.
+    The pathfinding algorithm I've written was inspired on the approach seen in Djikstra's algorithm, although my implementation was
+    entirely created by myself.
 -->
+
+
+<!DOCTYPE html>
+
 
 <html style="
     height: 100%;
@@ -13,7 +23,15 @@
 </head>
 
 <body style="margin: 0px;height:-webkit-fill-available;overflow:hidden;">
+    <!--
+        id = interface
+        purpose: container for entire program interface
+    -->
     <div id="interface">
+        <!--
+            id = helpContainer
+            purpose: contains help interface
+        -->
         <div id="helpContainer">
             <div id="helpInterface">
                 <div id="helpTitle">
@@ -39,6 +57,10 @@
                 </div>
             </div>
         </div>
+        <!--
+            id = gridContainer
+            purpose: contains table grid
+        -->
         <div id="gridContainer">
             <table id="navigationGrid" instance="0" running="false">
                 <tbody><tr>
@@ -91,6 +113,10 @@
                 </tr>
             </tbody></table>
         </div>
+        <!--
+            id = interfacePanel
+            purpose: contains the bottom interface bar
+        -->
         <div id="interfacePanel">
             <div id="btnContainer">
                 <button id="startBtn" isactive="true" class="menuBtn addRippleBtn" rippleColor="rgb(190,190,190)">
@@ -138,7 +164,6 @@
             </div>
         </div>
     </div>
-    <!--<script src="pathfinding.js"></script>-->
     
     <script src="pathfinder2.js"></script>
     <script src="ui.js"></script>
