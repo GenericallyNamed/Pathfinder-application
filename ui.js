@@ -61,27 +61,18 @@ for(var i = 0; i < totalRows; i++) {
  */
 function cellClicked(x,y) { 
     var selectedCell = gridTable.rows[y].cells[x];
-    cellType = gridTable.cellToMove;
-    var isStart = selectedCell.classList.contains(cellType);
+    var isStart = selectedCell.classList.contains(gridTable.cellToMove);
     var isFinish = selectedCell.classList.contains("cell-finish"); 
+    if(gridTable.issearching == false) {
         if(!isStart && !isFinish) {
             toggleWall(selectedCell);
-        } else if (isStart || isFinish) {
-            searchState = gridTable.issearching;
-            if(searchState == true) {
-                endSearch(x, y);
-            } else if (searchState == false) {
-                beginSearch(selectedCell, x, y);
-            } else {
-                console.log("Error");
-            }
         } else {
-            console.log("Error");
+            beginSearch(selectedCell, x, y);
         }
-    for(var i = 0; i < totalRows; i++) {
-        for(var j = 0; j < totalColumns; j++) {
-
-        }
+    } else if(gridTable.issearching == true && !selectedCell.classList.contains("error")) {
+        endSearch(x, y);
+    } else {
+        console.log("Couldn't complete requested action.");
     }
 }
 
@@ -94,16 +85,11 @@ function cellClicked(x,y) {
 function endSearch(x, y) { 
     gridTable.rows[gridTable.originY].cells[gridTable.originX].isorigin = false;
     gridTable.issearching = false;
-    var cellType = gridTable.cellToMove;
-    var originElement;
+    var originElement = gridTable.rows[gridTable.originY].cells[gridTable.originX];
     var selectedCell = gridTable.rows[y].cells[x];
-    if((gridTable.querySelectorAll(".none")).length != 0) {
-        originElement = (gridTable.querySelectorAll(".none"))[0];
-        originElement.className = "cell-unvisited";
-    } else {
-        originElement = (gridTable.querySelectorAll("." + cellType))[0];
-        originElement.className = gridTable.moveelementclasses;
-    }
+    originElement.className = "cell-unvisited dim";
+    selectedCell.className = gridTable.moveelementclasses;
+    originElement.isorigin == false;
     for(var i = 0; i < totalRows; i++ ) {
         for(var j = 0; j < totalColumns; j++) {
             if(!(j == x && i == y)) {
@@ -111,16 +97,6 @@ function endSearch(x, y) {
             }  
         }
     }
-    originElement.isorigin = false;
-    if(gridTable.originX != x && gridTable.originY != y) {
-        originElement.className = "cell-unvisited";
-        if(selectedCell.isWall == true) {
-            selectedCell.originalClasses = "cell-wall cell-unvisited";
-        } else {
-            selectedCell.originalClasses = "cell-unvisited";
-        }
-    }
-    
 
 }
 
@@ -129,8 +105,7 @@ function endSearch(x, y) {
  * @param {Object} cell The cell object being moved
  * @purpose Initiate searching procedure for new location of cell.
  */
-function beginSearch(cell) { 
-    gridTable.moveelementclasses = cell.classname;
+function beginSearch(cell) {
     gridTable.originX = cell.x; 
     gridTable.originY = cell.y;
     gridTable.issearching = true;
@@ -156,13 +131,8 @@ function beginSearch(cell) {
  * @purpose Toggle cell walls on or off
  */
 function toggleWall(cell) {
-    if(cell.classList.contains("cell-wall")) { //Checks if the given cell is a wall
-        cell.classList.remove('cell-wall'); //Removes the cell from the class "cell-wall"
-        cell.isWall = false; //Sets the property of the cell "isWall" to false
-    } else {
-        cell.classList.add('cell-wall'); //Adds the cell to the class "cell-wall"
-        cell.isWall = true; //Sets the property of the cell "isWall" to false
-    }
+    cell.classList.toggle("cell-wall"); //toggles the cell-wall class (to update the look of the cell)
+    cell.isWall = !(cell.isWall); //this very simple expression toggles the state of the "isWall" property
     cell.originalClasses = cell.className;
     cell.resetClasses = cell.className;
 }
@@ -230,22 +200,21 @@ function squareTable() {
  */
 function addRow() {
     let newRow = document.createElement('tr'); //first creates tr element to create row
-    gridTable.getElementsByTagName("tbody")[0].appendChild(newRow);
+    gridTable.getElementsByTagName("tbody")[0].appendChild(newRow); //the new row is appended to the gridTable element (the table containing the grid)
     totalRows++;
-    var x;
     for(var i = 0; i < totalColumns; i++) { //for-loop adds new row of cells
         x = i;
-        let newCell = document.createElement('td');
-        newCell.innerHTML = "<div class='cell'></div>";
-        newCell.classList.add("cell-unvisited");
-        newCell.resetClasses = newCell.className;
-        let row = gridTable.getElementsByTagName("tbody")[0].rows[totalRows-1];
+        let newCell = document.createElement('td'); //'td' elements are the individual cells
+        newCell.innerHTML = "<div class='cell'></div>"; //we set the "innerHTML" property to a div with the class "cell"
+        newCell.classList.add("cell-unvisited"); //the 'td' element is added to the class "cell-unvisited"
+        newCell.resetClasses = newCell.className; //we also set the resetClasses property of the new cell
+        let row = gridTable.getElementsByTagName("tbody")[0].rows[totalRows-1]; //
         row.appendChild(newCell); //appends new cells to row
     }
     setCoordinates(); //sets the coordinates for the new cells
     for(var a = 0; a < totalColumns; a++) { //adds event listeners to cells
         let currentCell = gridTable.rows[totalRows-1].cells[a];
-        addCellEventListeners(currentCell);
+        addCellEventListeners(currentCell); //runs the method to add event listeners to the new cells
     }
     squareTable(); //squares the table dimensions
 }
@@ -290,37 +259,19 @@ function setCoordinates() {
  * @purpose Remove row from grid
  */
 function removeRow() {
+    let startCell = gridTable.querySelectorAll(".cell-start")[0];
+    let finishCell = gridTable.querySelectorAll(".cell-finish")[0];
     var table = gridTable.getElementsByTagName("tbody")[0];
-    var containsStartCell = false;
-    var containsFinishCell = false;
     if(totalRows > 5) {
-        for(var i = 0; i < totalColumns; i++) {
-            if(table.rows[totalRows-1].cells[i].classList.contains("cell-start")) {
-                 containsStartCell = true;
-            }
-            if(table.rows[totalRows-1].cells[i].classList.contains("cell-finish")) {
-                containsFinishCell = true;
-            }
-        }
-        if(containsStartCell == false && containsFinishCell == false) {
-            table.rows[totalRows-1].remove();
-            totalRows--;
-        } else {
-            if(containsStartCell) {
-                var startCell = (gridTable.querySelectorAll(".cell-start"))[0];
-                table.rows[totalRows-2].cells[startCell.x].className = table.rows[totalRows-1].cells[startCell.x].className;
-            }
-            if(containsFinishCell) {
-                var finishCell = (gridTable.querySelectorAll(".cell-finish"))[0];    
-                table.rows[totalRows-2].cells[finishCell.x].className = table.rows[totalRows-1].cells[finishCell.x].className;
-            }
-            table.rows[totalRows-1].remove();
-            totalRows--;
-        }
+        //if the finish or start cell are in the row to be moved, they will be shifted over (see below if-statements)
+        if(startCell.y == (totalRows - 1)) table.rows[totalRows-2].cells[startCell.x].className = startCell.className; 
+        if(finishCell.y == (totalRows - 1)) table.rows[totalRows-2].cells[finishCell.x].className = finishCell.className; //if-statement written in single-line for compact-ness
+        table.rows[totalRows-1].remove();
+        totalRows--;
+        squareTable();   
     } else {
         alert("Sorry, there must be at least 5 rows.");
     }
-    squareTable();
 }
 
 /**
@@ -328,32 +279,19 @@ function removeRow() {
  * @purpose remove column from grid (at end)
  */
 function removeColumn() {
-    if(totalColumns > 5) {
+    if(totalColumns > 5) { //As there must be five rows minimum, this will only remove a row if there is MORE than 5.
         var startCell = document.querySelectorAll(".cell-start")[0];
         var finishCell = document.querySelectorAll(".cell-finish")[0];
-        var containsStartCell = false;
-        if(startCell.x == totalColumns-1) {
-            containsStartCell = true;
-        }
-        var containsFinishCell = false;
-        if(finishCell.x == totalColumns-1) {
-            containsFinishCell = true;
-        }
-        if(containsStartCell == true) {
-            var newX = startCell.x - 1;
-            gridTable.rows[startCell.y].cells[newX].className = startCell.className;
-        }
-        if(containsFinishCell == true) {
-            var newX = finishCell.x - 1;
-            gridTable.rows[finishCell.y].cells[newX].className = finishCell.className;
-        }
+        var newX = startCell.x - 1;
+        if(startCell.x == totalColumns - 1) gridTable.rows[startCell.y].cells[newX].className = startCell.className;
+        if(finishCell.x == totalColumns - 1) gridTable.rows[finishCell.y].cells[newX].className = finishCell.className;
         for(var i = 0; i < totalRows; i++) {
             gridTable.rows[i].cells[totalColumns-1].remove();
         }
         totalColumns--;
-        squareTable();
+        squareTable(); //runs the squareTable method to adjust the size proportions of the table.
     } else {
-        alert("Table requires more than 5 columns");
+        alert("Table requires at least 5 columns"); //If there are five columns, it alert the user that the table cannot be smaller than 5x5.
     }
 }
 
@@ -384,34 +322,29 @@ function setOriginalClasses(elem) {
  * used to add the appropriate event listeners to those cells.
  */
 function addCellEventListeners(elem) {
-    i = elem.y;
-    j = elem.x;
-    gridTable.rows[i].cells[j].addEventListener("mouseup",function(){
-        setOriginalClasses(this);
-        if(this.classList.contains("cell-start")) {
-            gridTable.cellToMove = "cell-start";
-        } else {
+    gridTable.rows[elem.y].cells[elem.x].addEventListener("mouseup",function(){ //note that the "this" keyword refers to the element that the event listener is added to
+        if(!(this.classList.contains("error"))) {
+            setOriginalClasses(this);
+        }
+        if(gridTable.issearching == false && this.classList.contains("cell-start")) {
+            gridTable.cellToMove = "cell-start"
+        }
+        if(gridTable.issearching == false && this.classList.contains("cell-finish")) {
             gridTable.cellToMove = "cell-finish"
         }
+            
         var cellType = gridTable.cellToMove;
-        var x = this.x;
-        var y = this.y;
         if(this.classList.contains(cellType) && gridTable.issearching == false) { 
             gridTable.moveelementclasses = this.className;
-            gridTable.setAttribute("moveelementclasses", gridTable.moveelementclasses);
-            this.isorigin = true;
+            this.isorigin = true;//when moving the start or finish cell, this is used to indicated the location of the original cell
         }
-        cellClicked(x, y);
-        
+        cellClicked(this.x, this.y); //pass the x and y property values of the element to the "cellClicked" method        
     });
-    gridTable.rows[i].cells[j].addEventListener("mouseenter",function(){
+    gridTable.rows[elem.y].cells[elem.x].addEventListener("mouseenter",function(){
         this.originalClasses = this.className;
-        var x = this.x;
-        var y = this.y;
-        gridTable.rows[y].cells[x].hovered = true;
+        gridTable.rows[this.y].cells[this.x].hovered = true;
         if(gridTable.issearching == true) {
             gridTable.originalClasses = this.className;
-            gridTable.moveelementclasses = gridTable.getAttribute("moveelementclasses");
             if((gridTable.cellToMove == "cell-start" && this.classList.contains("cell-finish")) || (gridTable.cellToMove == "cell-finish" && this.classList.contains("cell-start"))) {
                 this.className = "error";
             } else {
@@ -420,24 +353,11 @@ function addCellEventListeners(elem) {
         }
         
     });
-    gridTable.rows[i].cells[j].addEventListener("mouseleave",function(){
-        var x = this.x;
-        var y = this.y;
-        gridTable.rows[y].cells[x].hovered = false;
+    gridTable.rows[elem.y].cells[elem.x].addEventListener("mouseleave",function(){
+        gridTable.rows[this.y].cells[this.x].hovered = false;
         if(gridTable.issearching == true) {
             if(this.isorigin == true) {
-                for(var i = 0; i < totalRows; i++) {
-                    for(var j = 0; j < totalColumns; j++) {
-                        if(gridTable.rows[i].cells[j].isorigin == true) {
-                            gridTable.rows[i].cells[j].className = "none";
-                        }
-                    }
-                }
-                if(this.originalClasses.indexOf(gridTable.originElement) != -1) {
-                    this.className = "none";
-                } else {
-                    this.isorigin = false;
-                }
+                this.className = "none";
             } else {
                 this.className = this.originalClasses;
             }
@@ -445,15 +365,15 @@ function addCellEventListeners(elem) {
             for(var i = 0; i < containsOriginalClasses.length; i++) {
                 if(containsOriginalClasses[i].isorigin != true && gridTable.issearching == true) {
                     containsOriginalClasses[i].className = containsOriginalClasses[i].originalClasses;
-                    delete containsOriginalClasses[i].originalClasses;
+                    delete containsOriginalClasses[i].originalClasses; //delete operator used to remove the value of the originalClasses property
                 } else {
-                    delete containsOriginalClasses[i].originalClasses;
+                    delete containsOriginalClasses[i].originalClasses; //delete operator used to remove the value of the originalClasses property
                 }
             }
         } else if(gridTable.issearching == false) {
             var containsOriginalClasses = gridTable.querySelectorAll("[originalClasses]");
             for(var i = 0; i < containsOriginalClasses.length; i++) {
-                delete containsOriginalClasses[i].originalClasses;
+                delete containsOriginalClasses[i].originalClasses; //delete operator used to remove the value of the originalClasses property
             }    
         }
         
@@ -470,7 +390,7 @@ function setResetClasses() {
     for(var i = 0; i < totalRows; i++ ) {
         for(var j = 0; j < totalColumns; j++ ) {
             let elem = gridTable.rows[i].cells[j];
-            elem.resetClasses = elem.className;
+            elem.resetClasses = elem.className; //element.className is the class list in string form, and can be used to update the classlist of the element
         }
     }
 }
@@ -496,8 +416,6 @@ function resetGrid() {
     setResetClasses();
     gridTable.isRunning = false;
 }
-
-
 
 addColBtn.addEventListener("click",function(){
     addColumn();

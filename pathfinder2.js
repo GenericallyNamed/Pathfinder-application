@@ -74,9 +74,11 @@ function drawPath(p, i) {
     //First retrieves the start cell, assigns it to the array "newCells"
     proxy(newCells);
     //Note that the "path" method is not called directly, but instead calls the proxy method. 
-    var path = [gridTable.querySelector(".cell-finish")];   
-    path = makePath(path);
-    drawPath(path, path.length);
+    if(gridTable.nextCellFound == true) {
+        var path = [gridTable.querySelector(".cell-finish")];   
+        path = makePath(path);
+        drawPath(path, path.length);
+    }
 }
 
 /**
@@ -141,7 +143,7 @@ function path(newCells) {
             //The newCells array is updated to contain all newly identified cells labeled "cell-new"
             newCells = gridTable.querySelectorAll(".cell-new");
             //The method querySelectorAll returns an array of all cells in the class "cell-new"
-            path(newCells);
+            path(newCells); //Uses recursion by calling itself until the exit condition (find finish or find no route) is met
         }
     } else {
         alert("Could not find a path.");
